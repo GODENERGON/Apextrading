@@ -1,0 +1,36 @@
+# Runtime & Logs
+logs/**/*.log
+*.log
+
+# Container state
+.dockerignore
+.env.local
+.env.*.local
+
+# Data directories
+data/*
+!data/.gitkeep
+
+# Config (keep structure, ignore secrets)
+config/*.secret.*
+config/.env
+config/*.key
+
+# Node/Python
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# System
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Docker
+.docker/
+*.tar.gz
