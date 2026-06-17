@@ -19,14 +19,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Create app directories
 RUN mkdir -p /app /workspace /app/config /app/logs
 
-# Install minimal Python dependencies
+# Copy API server
+COPY api_server.py /app/api_server.py
+
+# Install Python dependencies
 RUN pip install --no-cache-dir \
     requests \
     aiohttp \
-    python-dotenv
-
-# Simple entrypoint
-RUN echo '#!/bin/sh\necho "Odysseus Trading Agent"\necho "Workspace: /workspace"\necho "Ollama: $OLLAMA_HOST"\necho "Ready for trading..."\n/bin/sh\n' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+    python-dotenv \
+    fastapi \
+    uvicorn \
+    pydantic
 
 WORKDIR /app
-ENTRYPOINT ["/app/entrypoint.sh"]
+CMD ["python3", "/app/api_server.py"]

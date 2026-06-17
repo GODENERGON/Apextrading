@@ -5,6 +5,10 @@ services:
     image: odysseus:latest
     container_name: odysseus-trading
     
+    # Expose API server port
+    ports:
+      - "8888:8888"  # API server (localhost:8888)
+    
     # Network isolation
     networks:
       - odysseus-net
@@ -40,6 +44,8 @@ services:
       - VAULT_PATH=/vault
       - LOG_LEVEL=info
       - TZ=Europe/Rome
+      - API_HOST=0.0.0.0
+      - API_PORT=8888
     
     # No auto-restart (manual control via orchestration scripts)
     restart: no
@@ -47,6 +53,9 @@ services:
     # Keep it simple: just run, don't daemonize
     stdin_open: true
     tty: true
+    
+    # Start API server by default
+    command: python3 /app/api_server.py
     
     # Extra hosts for host access
     extra_hosts:
