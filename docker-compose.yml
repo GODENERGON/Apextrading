@@ -1,0 +1,60 @@
+version: '3.9'
+
+services:
+  odysseus:
+    image: odysseus:latest
+    container_name: odysseus-trading
+    
+    # Network isolation
+    networks:
+      - odysseus-net
+    
+    # Resource limits (cgroups)
+    deploy:
+      resources:
+        limits:
+          cpus: '4'      # Max 4 cores (out of 8)
+          memory: 16G    # Max 16GB (out of 32GB)
+        reservations:
+          cpus: '2'
+          memory: 8G
+    
+    # Volumes: mount strategically
+    volumes:
+      # Odysseus workspace (RW)
+      - /home/godener/odysseus/data:/workspace
+      
+      # Vault shared (RO for safety)
+      - /home/godener/vault:/vault:ro
+      
+      # Logs
+      - /home/godener/odysseus/logs:/app/logs
+      
+      # Config (RW for odysseus config)
+      - /home/godener/odysseus/config:/app/config
+    
+    # Environment variables
+    environment:
+      - OLLAMA_HOST=http://host.docker.internal:11434
+      - WORKSPACE=/workspace
+      - VAULT_PATH=/vault
+      - LOG_LEVEL=info
+      - TZ=Europe/Rome
+    
+    # No auto-restart (manual control via orchestration scripts)
+    restart: no
+    
+    # Keep it simple: just run, don't daemonize
+    stdin_open: true
+    tty: true
+    
+    # Extra hosts for host access
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  odysseus-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.28.0.0/16
