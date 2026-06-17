@@ -1,0 +1,32 @@
+[Unit]
+Description=Odysseus Trading Agent
+Documentation=https://github.com/GODENERGON/Apextrading
+After=docker.service
+Requires=docker.service
+ConditionHost=godener-NUC8i7BEH
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/home/godener/odysseus
+
+# Start Odysseus via orchestrate script
+ExecStart=/home/godener/odysseus/orchestrate.sh odysseus
+# Stop via script
+ExecStop=/home/godener/odysseus/orchestrate.sh openclaw
+
+# Environment
+Environment="PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+StandardOutput=journal
+StandardError=journal
+
+# Safety: only manual start
+Restart=no
+RestartSec=30s
+
+# User
+User=godener
+Group=docker
+
+[Install]
+WantedBy=multi-user.target
