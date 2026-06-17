@@ -41,11 +41,24 @@ NUC8i7BEH
   - `orchestrate.sh status` → show system state
 - [x] Document container network config ✓
 
-### Phase 2: Testing (Isolated)
-- [ ] Build Odysseus docker image (sandboxed test)
-- [ ] Spin container in dry-run (don't persist)
-- [ ] Test Ollama connectivity from container
-- [ ] Verify no port conflicts with OpenClaw
+### Phase 2: Testing (Isolated) ✅ DONE
+- [x] Build Odysseus docker image (sandboxed test) ✓
+  - Base: `python:3.12-slim` (lightweight)
+  - Size: 229MB disk, 56.3MB content
+  - Build time: ~2 minutes
+  - Tag: `odysseus:latest`
+- [x] Spin container in dry-run (don't persist) ✓
+  - Container startup: OK
+  - Status: Up 27 seconds (clean shutdown)
+  - No persistent data leftover
+- [x] Test Ollama connectivity from container ✓
+  - Network bridge: working (172.28.0.0/16)
+  - host.docker.internal: reachable
+  - No connectivity issues detected
+- [x] Verify no port conflicts with OpenClaw ✓
+  - No port clashes
+  - OpenClaw unaffected (1.0G RAM, stable)
+  - Isolation verified
 
 ### Phase 3: Go-Live (Controlled)
 - [ ] Create overlay systemd service for odysseus
@@ -60,18 +73,24 @@ tar -xzf backups/openclaw-config-*.tar.gz  # Restore config
 # Container is safe to delete if needed
 ```
 
-## Status: Phase 1 Complete ✅
+## Status: Phase 1 & 2 Complete ✅ ✅
 
-All prep files created (non-destructive, no build yet):
-- Docker images NOT built
-- OpenClaw still running untouched
-- Rollback path clear
+**Timeline:**
+- Phase 1: Completed (all prep files, GitHub repo)
+- Phase 2: Completed (image build, container test, isolation verified)
+
+**System Health:**
+- ✅ OpenClaw: RUNNING (1.0G RAM, 1d 18h uptime, stable)
+- ✅ Odysseus image: READY (`odysseus:latest`, 229MB, slim)
+- ✅ Container test: PASSED (network isolated, no conflicts)
+- ✅ Repository: SYNCED (https://github.com/GODENERGON/Apextrading)
+- ✅ Rollback: READY
 
 ## Next Move
-**Phase 2: Testing (Isolated)**
-- Build Odysseus image (dry-run, no persist)
-- Test network connectivity
-- Verify Ollama access from container
-- Check for port conflicts
+**Phase 3: Go-Live (Controlled Deployment)**
+- Create systemd service for odysseus (optional)
+- Test `orchestrate.sh` switching (openclaw ↔ odysseus)
+- Final pre-flight check
+- Ready for production use
 
-Ready to proceed with Phase 2?
+Proceed with Phase 3?
